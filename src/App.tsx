@@ -7,15 +7,15 @@ import { Login } from "./components/Login";
 import useAuthUser from "./hooks/useAuthUser";
 
 function App() {
-  const [user, loading] = useAuthUser();
+	const [user, loading] = useAuthUser();
 
-  if (loading) return <div>LOADING...</div>;
+	if (loading) return <div>LOADING...</div>;
 
-  if (!user) return <Login />;
+	if (!user) return <Login />;
 
-  console.log("user => ", user);
+	console.log("user => ", user);
 
-  return <div>FUNFOU!!!</div>;
+	return <div>FUNFOU!!!</div>;
 }
 
 export default App;
