@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
-import firebase from "firebase/compat/app";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, serverTimestamp } from "firebase/firestore";
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import { getStorage, ref } from "firebase/storage";
 
@@ -25,8 +24,8 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const storage = ref(getStorage(app), "images");
 const audioStorage = ref(getStorage(app), "audios");
-const createTimestamp = firebase.firestore.FieldValue.serverTimestamp;
-const serverTimestamp = firebase.database.ServerValue.TIMESTAMP;
+const createTimestamp = serverTimestamp;
+const getServerTimestamp = serverTimestamp();
 
 export {
   db,
@@ -35,5 +34,5 @@ export {
   storage,
   audioStorage,
   createTimestamp,
-  serverTimestamp,
+  getServerTimestamp,
 };
