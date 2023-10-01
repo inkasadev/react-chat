@@ -9,15 +9,15 @@ import {
 import { Avatar, IconButton } from "@mui/material";
 import cs from "classnames";
 import { User } from "firebase/auth";
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { auth, createTimestamp, db } from "../../firebase";
-import useWindowSize from "../../hooks/useWindowSize";
-import styles from "./styles.module.css";
-import { Route, Routes } from "react-router-dom";
 import { collection, doc, setDoc } from "firebase/firestore";
+import { useState } from "react";
+import { NavLink, Route, Routes } from "react-router-dom";
+import { auth, createTimestamp, db } from "../../firebase";
 import useRooms from "../../hooks/useRooms";
+import useUsers from "../../hooks/useUsers";
+import useWindowSize from "../../hooks/useWindowSize";
 import { SidebarList } from "../SidebarList";
+import styles from "./styles.module.css";
 
 interface ISidebarProps {
 	user: User | null | undefined;
@@ -28,6 +28,7 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 	const [rooms] = useRooms();
 	const [menu, setMenu] = useState(1);
 	const page = useWindowSize();
+	const [users] = useUsers(user as User);
 
 	const handleSignOut = () => {
 		auth.signOut();
@@ -119,7 +120,7 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 					/>
 					<Route
 						path="/users"
-						element={<SidebarList title="Users" data={[]} />}
+						element={<SidebarList title="Users" data={users as any[]} />}
 					/>
 					<Route
 						path="/search"
@@ -132,7 +133,9 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 			{!page.isMobile && menu === 2 && (
 				<SidebarList title="Rooms" data={rooms as any[]} />
 			)}
-			{!page.isMobile && menu === 3 && <SidebarList title="Users" data={[]} />}
+			{!page.isMobile && menu === 3 && (
+				<SidebarList title="Users" data={users as any[]} />
+			)}
 			{!page.isMobile && menu === 4 && (
 				<SidebarList title="Search Results" data={[]} />
 			)}

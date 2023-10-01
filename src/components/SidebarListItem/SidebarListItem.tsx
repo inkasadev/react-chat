@@ -1,8 +1,7 @@
-import React from "react";
-import cs from "classnames";
-import styles from "./styles.module.css";
-import { Link } from "react-router-dom";
 import { Avatar } from "@mui/material";
+import cs from "classnames";
+import { Link } from "react-router-dom";
+import styles from "./styles.module.css";
 
 interface ISidebarListProps {
 	item: any;
@@ -12,7 +11,7 @@ interface ISidebarListProps {
 export const SidebarListItem = ({ item, className }: ISidebarListProps) => {
 	return (
 		<Link
-			to={`/rooms/${item.id}`}
+			to={`/room/${item.id}`}
 			className={cs(styles.sidebarListItem, className)}
 		>
 			<div className={styles.chat}>
