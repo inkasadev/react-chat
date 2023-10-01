@@ -11,10 +11,13 @@ import cs from "classnames";
 import { User } from "firebase/auth";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { auth } from "../../firebase";
+import { auth, createTimestamp, db } from "../../firebase";
 import useWindowSize from "../../hooks/useWindowSize";
 import styles from "./styles.module.css";
 import { Route, Routes } from "react-router-dom";
+import { collection, doc, setDoc } from "firebase/firestore";
+import useRooms from "../../hooks/useRooms";
+import { SidebarList } from "../SidebarList";
 
 interface ISidebarProps {
 	user: User | null | undefined;
@@ -22,6 +25,7 @@ interface ISidebarProps {
 }
 
 export const Sidebar = ({ user, className }: ISidebarProps) => {
+	const [rooms] = useRooms();
 	const [menu, setMenu] = useState(1);
 	const page = useWindowSize();
 	/*
@@ -43,7 +47,16 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 		auth.signOut();
 	};
 
-	const createRoom = () => {};
+	const createRoom = async () => {
+		const roomName = prompt("Enter room name");
+		if (roomName?.trim()) {
+			const roomsRef = await collection(db, "rooms");
+			await setDoc(doc(roomsRef), {
+				name: roomName,
+				timestamp: createTimestamp(),
+			});
+		}
+	};
 
 	return (
 		<div className={cs(styles.sidebar, className)}>
@@ -110,19 +123,39 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 
 			{page.isMobile && (
 				<Routes>
-					<Route path="/chats" element={<div>Chats</div>} />
-					<Route path="/rooms" element={<div>Rooms</div>} />
-					<Route path="/users" element={<div>Users</div>} />
-					<Route path="/search" element={<div>Search</div>} />
+					<Route
+						path="/chats"
+						element={<SidebarList title="Chats" data={[]} />}
+					/>
+					<Route
+						path="/rooms"
+						element={<SidebarList title="Rooms" data={rooms as any[]} />}
+					/>
+					<Route
+						path="/users"
+						element={<SidebarList title="Users" data={[]} />}
+					/>
+					<Route
+						path="/search"
+						element={<SidebarList title="Search Results" data={[]} />}
+					/>
 				</Routes>
 			)}
 
-			{!page.isMobile && menu === 1 && <div>Chats</div>}
-			{!page.isMobile && menu === 2 && <div>Rooms</div>}
-			{!page.isMobile && menu === 3 && <div>Users</div>}
+			{!page.isMobile && menu === 1 && <SidebarList title="Chats" data={[]} />}
+			{!page.isMobile && menu === 2 && (
+				<SidebarList title="Rooms" data={rooms as any[]} />
+			)}
+			{!page.isMobile && menu === 3 && <SidebarList title="Users" data={[]} />}
+			{!page.isMobile && menu === 4 && (
+				<SidebarList title="Search Results" data={[]} />
+			)}
 
 			<div className={styles.chatAddRoom}>
-				<IconButton className={styles.chatAddRoomButton} onClick={createRoom}>
+				<IconButton
+					className={styles.chatAddRoomButton}
+					onClick={() => createRoom()}
+				>
 					<Add className={styles.addIcon} />
 				</IconButton>
 			</div>

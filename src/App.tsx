@@ -1,26 +1,25 @@
-// import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
-
 import { User } from "firebase/auth";
-import { Route, Routes, Navigate, redirect } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import styles from "./App.module.css";
 import { Chat } from "./components/Chat";
 import { Login } from "./components/Login";
 import { Sidebar } from "./components/Sidebar";
+import { Spinner } from "./components/Spinner";
 import useAuthUser from "./hooks/useAuthUser";
 import useWindowSize from "./hooks/useWindowSize";
-import { useEffect } from "react";
 
 function App() {
 	const [user, loading] = useAuthUser();
 	const page = useWindowSize();
 
-	if (loading) return <div>LOADING...</div>;
+	if (loading)
+		return (
+			<div className={styles.app}>
+				<Spinner />
+			</div>
+		);
 
 	if (!user) return <Login />;
-
-	console.log("user => ", user);
 
 	return (
 		<div className={styles.app}>
