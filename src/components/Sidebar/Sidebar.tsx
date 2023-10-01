@@ -9,7 +9,14 @@ import {
 import { Avatar, IconButton } from "@mui/material";
 import cs from "classnames";
 import { User } from "firebase/auth";
-import { collection, doc, setDoc } from "firebase/firestore";
+import {
+	collection,
+	doc,
+	getDocs,
+	query,
+	setDoc,
+	where,
+} from "firebase/firestore";
 import { useState } from "react";
 import { NavLink, Route, Routes } from "react-router-dom";
 import { auth, createTimestamp, db } from "../../firebase";
@@ -31,6 +38,8 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 	const page = useWindowSize();
 	const [users] = useUsers(user as User);
 	const [chats] = useChats(user as User);
+	const [search, setSearch] = useState("");
+	const [searchResults, setSearchResults] = useState<any[]>([]);
 
 	const handleSignOut = () => {
 		auth.signOut();
@@ -47,6 +56,33 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 		}
 	};
 
+	const searchUserAndRooms = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		// const searchInput = document.getElementById("search") as HTMLInputElement;
+		const value = search.trim();
+		const usersRef = await collection(db, "users");
+		const roomsRef = await collection(db, "rooms");
+		const q1 = query(usersRef, where("name", "==", value));
+		const q2 = query(roomsRef, where("name", "==", value));
+		const userSnapshot = await getDocs(q1);
+		const roomSnapshot = await getDocs(q2);
+
+		const userResults = userSnapshot.docs.map((doc) => ({
+			id: doc.id,
+			...doc.data(),
+		}));
+
+		const roomResults = roomSnapshot.docs.map((doc) => ({
+			id: doc.id,
+			...doc.data(),
+		}));
+
+		const results = [...userResults, ...roomResults];
+		console.log("results => ", results);
+		setMenu(4);
+		setSearchResults(results);
+	};
+
 	return (
 		<div className={cs(styles.sidebar, className)}>
 			<div className={styles.header}>
@@ -61,13 +97,15 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 				</div>
 			</div>
 			<div className={styles.search}>
-				<form className={styles.searchContainer}>
+				<form onSubmit={searchUserAndRooms} className={styles.searchContainer}>
 					<SearchOutlined className={styles.searchIcon} />
 					<input
 						type="text"
 						placeholder="Search for users or rooms"
 						id="search"
 						className={styles.searchInput}
+						onChange={(e) => setSearch(e.target.value)}
+						value={search}
 					/>
 				</form>
 			</div>
@@ -126,8 +164,11 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 					/>
 					<Route
 						path="/search"
-						element={<SidebarList title="Search Results" data={[]} />}
+						element={
+							<SidebarList title="Search Results" data={searchResults} />
+						}
 					/>
+					<Route path="*" element={<p>Path not resolved 2</p>} />
 				</Routes>
 			)}
 
@@ -141,7 +182,7 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 				<SidebarList title="Users" data={users as any[]} />
 			)}
 			{!page.isMobile && menu === 4 && (
-				<SidebarList title="Search Results" data={[]} />
+				<SidebarList title="Search Results" data={searchResults} />
 			)}
 
 			<div className={styles.chatAddRoom}>
