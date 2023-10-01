@@ -13,6 +13,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { NavLink, Route, Routes } from "react-router-dom";
 import { auth, createTimestamp, db } from "../../firebase";
+import useChats from "../../hooks/useChats";
 import useRooms from "../../hooks/useRooms";
 import useUsers from "../../hooks/useUsers";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -29,6 +30,7 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 	const [menu, setMenu] = useState(1);
 	const page = useWindowSize();
 	const [users] = useUsers(user as User);
+	const [chats] = useChats(user as User);
 
 	const handleSignOut = () => {
 		auth.signOut();
@@ -112,7 +114,7 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 				<Routes>
 					<Route
 						path="/chats"
-						element={<SidebarList title="Chats" data={[]} />}
+						element={<SidebarList title="Chats" data={chats as any[]} />}
 					/>
 					<Route
 						path="/rooms"
@@ -129,7 +131,9 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 				</Routes>
 			)}
 
-			{!page.isMobile && menu === 1 && <SidebarList title="Chats" data={[]} />}
+			{!page.isMobile && menu === 1 && (
+				<SidebarList title="Chats" data={chats as any[]} />
+			)}
 			{!page.isMobile && menu === 2 && (
 				<SidebarList title="Rooms" data={rooms as any[]} />
 			)}
