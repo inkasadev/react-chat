@@ -1,0 +1,14 @@
+.sidebarList::-webkit-scrollbar {
+	display: none;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.title {
+	font-weight: 700;
+	padding-top: 1.6rem;
+	padding-bottom: 1rem;
+	padding-left: 2rem;
+	color: black;
+	transition: opacity 400ms;
+}

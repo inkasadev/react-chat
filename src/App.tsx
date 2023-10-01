@@ -23,7 +23,7 @@ function App() {
 
 	return (
 		<div className={styles.app}>
-			<Navigate to={page.isMobile ? "/chats" : "/"} replace={true} />
+			{/* <Navigate to={page.isMobile ? "/chats" : "/"} replace={true} /> */}
 			<Sidebar user={user as User} />
 			<Routes>
 				<Route path="/room/:roomId" element={<Chat user={user as User} />} />

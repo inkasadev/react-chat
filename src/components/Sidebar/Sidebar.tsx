@@ -28,20 +28,6 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 	const [rooms] = useRooms();
 	const [menu, setMenu] = useState(1);
 	const page = useWindowSize();
-	/*
-    const Nav = page.isMobile
-		? NavLink
-		: ({ activeClass, onClick, children }: any) => (
-				<div
-					className={cs({
-						[styles.menuSelected]: activeClass,
-					})}
-					onClick={onClick}
-				>
-					{children}
-				</div>
-		  );
-    */
 
 	const handleSignOut = () => {
 		auth.signOut();
