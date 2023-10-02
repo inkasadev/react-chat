@@ -1,0 +1,1 @@
+export { ChatFooter } from "./ChatFooter";

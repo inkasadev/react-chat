@@ -20,7 +20,7 @@ export const SidebarListItem = ({ item, className }: ISidebarListProps) => {
 						style={{ width: 45, height: 45 }}
 						src={
 							item.photoURL ||
-							`	https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${item.id}`
+							`https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${item.id}`
 						}
 					/>
 				</div>

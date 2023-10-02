@@ -17,7 +17,7 @@ const useUsers = (user: User) => {
 			.filter((doc) => doc.id !== user.uid)
 			.map((doc) => {
 				const id =
-					doc.id > user.uid ? `${doc.id}-${user.uid}` : `${user.uid}-${doc.id}`;
+					doc.id > user.uid ? `${doc.id}${user.uid}` : `${user.uid}${doc.id}`;
 
 				return {
 					id,
