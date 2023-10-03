@@ -1,12 +1,15 @@
 import { AddPhotoAlternate, ArrowBack, MoreVert } from "@mui/icons-material";
-import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
 import cs from "classnames";
 import { User } from "firebase/auth";
-import useWindowSize from "../../hooks/useWindowSize";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import useRoom from "../../hooks/useRoom";
-import styles from "./styles.module.css";
+import useWindowSize from "../../hooks/useWindowSize";
 import { ChatMessages } from "../ChatMessages";
+import { MediaPreview } from "../MediaPreview";
+import styles from "./styles.module.css";
+import { ChatFooter } from "../ChatFooter";
 
 interface IChatProps {
 	user: User | null | undefined;
@@ -16,11 +19,36 @@ interface IChatProps {
 export const Chat = ({ user, className }: IChatProps) => {
 	const { roomId } = useParams();
 	const page = useWindowSize();
+	const navigate = useNavigate();
+	const [image, setImage] = useState<File | null>(null);
+	const [input, setInput] = useState("");
+	const [src, setSrc] = useState("");
 	if (!roomId) return null;
 
 	const [room] = useRoom(roomId as string, user?.uid as string);
 
-	console.log("rooms => ", room);
+	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setInput(e.target.value);
+	};
+
+	const sendMessage = () => {};
+
+	const showPreview = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+		setImage(file);
+
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			setSrc(e.target?.result as string);
+		};
+		reader.readAsDataURL(file);
+	};
+
+	const hidePreview = () => {
+		setImage(null);
+		setSrc("");
+	};
 
 	return (
 		<div className={cs(styles.chat, className)}>
@@ -28,7 +56,7 @@ export const Chat = ({ user, className }: IChatProps) => {
 
 			<div className={styles.header}>
 				{page.isMobile && (
-					<IconButton>
+					<IconButton onClick={() => navigate(-1)}>
 						<ArrowBack />
 					</IconButton>
 				)}
@@ -47,12 +75,14 @@ export const Chat = ({ user, className }: IChatProps) => {
 				</div>
 
 				<div className={styles.headerRight}>
-					{/* <input
+					<input
 						id="image"
 						style={{ display: "none" }}
 						accept="image/*"
 						type="file"
-				/> */}
+						onChange={showPreview}
+					/>
+
 					<IconButton>
 						<label style={{ cursor: "pointer", height: 24 }} htmlFor="image">
 							<AddPhotoAlternate className={styles.headerRightIcon} />
@@ -76,6 +106,10 @@ export const Chat = ({ user, className }: IChatProps) => {
 					<ChatMessages />
 				</div>
 			</div>
+
+			<MediaPreview src={src} hidePreview={hidePreview} />
+
+			<ChatFooter />
 		</div>
 	);
 };
