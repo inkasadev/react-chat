@@ -1,13 +1,15 @@
 import cs from "classnames";
-import styles from "./styles.module.css";
 import { User } from "firebase/auth";
 import { AudioPlayer } from "../AudioPlayer";
 import { Spinner } from "../Spinner";
+import styles from "./styles.module.css";
 
 interface IChatMessagesProps {
 	messages: any[];
 	user: User | null | undefined;
 	roomId: string;
+	audioId: string;
+	setAudioId: React.Dispatch<React.SetStateAction<string>>;
 	className?: string;
 }
 
@@ -15,6 +17,8 @@ export const ChatMessages = ({
 	messages,
 	user,
 	roomId,
+	audioId,
+	setAudioId,
 	className,
 }: IChatMessagesProps) => {
 	if (!messages) return null;
@@ -62,7 +66,14 @@ export const ChatMessages = ({
 						) : null}
 
 						{message.audioName ? (
-							<AudioPlayer />
+							<AudioPlayer
+								isUser={isUser}
+								roomId={roomId}
+								id={message.id}
+								audioUrl={message.audioUrl}
+								audioId={audioId}
+								setAudioId={setAudioId}
+							/>
 						) : (
 							<span className={styles.message}>{message.message}</span>
 						)}

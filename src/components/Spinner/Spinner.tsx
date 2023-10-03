@@ -2,7 +2,7 @@ import cs from "classnames";
 import styles from "./styles.module.css";
 
 interface ISpinnerProps {
-	style: React.CSSProperties;
+	style?: React.CSSProperties;
 	className?: string;
 }
 

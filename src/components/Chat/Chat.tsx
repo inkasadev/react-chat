@@ -29,12 +29,12 @@ export const Chat = ({ user, className }: IChatProps) => {
 	const [image, setImage] = useState<File | null>(null);
 	const [input, setInput] = useState("");
 	const [src, setSrc] = useState("");
+	const [audioId, setAudioId] = useState("");
+
 	if (!roomId) return null;
 
 	const [room] = useRoom(roomId as string, user?.uid as string);
 	const [messages] = useChatMessages(roomId as string);
-
-	console.log("messages => ", messages);
 
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInput(e.target.value);
@@ -89,12 +89,10 @@ export const Chat = ({ user, className }: IChatProps) => {
 			await setDoc(messageRef, newMessage);
 
 			if (image) {
-				console.log("compressing...");
 				new Compressor(image, {
 					quality: 0.8,
 					maxWidth: 1920,
 					async success(result) {
-						console.log("image compressed");
 						setSrc("");
 						setImage(null);
 
@@ -186,6 +184,8 @@ export const Chat = ({ user, className }: IChatProps) => {
 						messages={messages as any[]}
 						user={user}
 						roomId={roomId}
+						audioId={audioId}
+						setAudioId={setAudioId}
 					/>
 				</div>
 			</div>
@@ -197,6 +197,10 @@ export const Chat = ({ user, className }: IChatProps) => {
 				onChange={onChange}
 				sendMessage={sendMessage}
 				image={image}
+				setAudioId={setAudioId}
+				user={user}
+				room={room}
+				roomId={roomId}
 			/>
 		</div>
 	);

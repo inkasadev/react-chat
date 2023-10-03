@@ -78,7 +78,6 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 		}));
 
 		const results = [...userResults, ...roomResults];
-		console.log("results => ", results);
 		setMenu(4);
 		setSearchResults(results);
 	};

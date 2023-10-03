@@ -46,6 +46,10 @@
 	outline: none;
 }
 
+.hideSendBtn {
+	display: none;
+}
+
 .sendBtn svg {
 	position: absolute;
 	top: 50%;
@@ -79,6 +83,67 @@
 .footerInput:focus {
 	outline: none;
 }
+
+.record {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	right: 4rem;
+	width: 13.5rem;
+	/*
+	opacity: 0;
+	transition: opacity 300ms;
+  */
+}
+
+.recordInfoContainer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 53px;
+}
+
+.recordRedCircle {
+	opacity: 0;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #f21d2f;
+	animation: animate-record-circle 500ms infinite alternate;
+}
+
+@keyframes animate-record-circle {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+/*
+.record > div {
+
+}
+
+.record__redcircle {
+
+}
+
+.record__duration {
+  font-size: 15px;
+  font-weight: 500;
+  color: #737373;
+}
+
+.record > .MuiSvgIcon-root {
+  cursor: pointer;
+}
+
+
+*/
 
 /*
 
@@ -147,50 +212,5 @@
     transform: scale(0.8) translateX(-57%) translateY(-58%) !important;
   }
   
-  .record {
-    opacity: 0;
-    transition: opacity 300ms;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    right: 86px;
-    width: 135px;
-  }
-  
-  .record > div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 53px;
-  }
-  
-  .record__redcircle {
-    opacity: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #f21d2f;
-    animation: animate-record-circle 500ms infinite alternate;
-  }
-  
-  .record__duration {
-    font-size: 15px;
-    font-weight: 500;
-    color: #737373;
-  }
-  
-  .record > .MuiSvgIcon-root {
-    cursor: pointer;
-  }
-  
-  @keyframes animate-record-circle {
-    from {
-      opacity: 0;
-    }
-  
-    to {
-      opacity: 1;
-    }
-  }
+
 */
