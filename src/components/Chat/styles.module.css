@@ -63,3 +63,9 @@
 .headerRightIcon {
 	font-size: 2.4rem !important;
 }
+
+.bodyContainer {
+	overflow-y: scroll;
+	height: 82%;
+	padding: 0 1rem;
+}

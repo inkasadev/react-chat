@@ -15,6 +15,7 @@ import { ChatFooter } from "../ChatFooter";
 import { ChatMessages } from "../ChatMessages";
 import { MediaPreview } from "../MediaPreview";
 import styles from "./styles.module.css";
+import useChatMessages from "../../hooks/useChatMessages";
 
 interface IChatProps {
 	user: User | null | undefined;
@@ -31,6 +32,9 @@ export const Chat = ({ user, className }: IChatProps) => {
 	if (!roomId) return null;
 
 	const [room] = useRoom(roomId as string, user?.uid as string);
+	const [messages] = useChatMessages(roomId as string);
+
+	console.log("messages => ", messages);
 
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInput(e.target.value);
@@ -178,7 +182,11 @@ export const Chat = ({ user, className }: IChatProps) => {
 			<div className={styles.bodyContainer}>
 				{/* <div className="chat__body" style={{ height: page.height - 68 }}> */}
 				<div className={styles.body}>
-					<ChatMessages />
+					<ChatMessages
+						messages={messages as any[]}
+						user={user}
+						roomId={roomId}
+					/>
 				</div>
 			</div>
 
