@@ -1,15 +1,20 @@
 import { AddPhotoAlternate, ArrowBack, MoreVert } from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
 import cs from "classnames";
+import Compressor from "compressorjs";
 import { User } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
+import { createTimestamp, db, storage } from "../../firebase";
 import useRoom from "../../hooks/useRoom";
 import useWindowSize from "../../hooks/useWindowSize";
+import { ChatFooter } from "../ChatFooter";
 import { ChatMessages } from "../ChatMessages";
 import { MediaPreview } from "../MediaPreview";
 import styles from "./styles.module.css";
-import { ChatFooter } from "../ChatFooter";
 
 interface IChatProps {
 	user: User | null | undefined;
@@ -29,9 +34,79 @@ export const Chat = ({ user, className }: IChatProps) => {
 
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInput(e.target.value);
+		e.preventDefault();
 	};
 
-	const sendMessage = () => {};
+	const sendMessage = async (e: any) => {
+		if (input.trim() || (input === "" && image)) {
+			setInput("");
+
+			if (image) {
+				hidePreview();
+			}
+
+			const imageName = uuid();
+			const newMessage = image
+				? {
+						name: user?.displayName,
+						message: input,
+						uid: user?.uid,
+						timestamp: createTimestamp(),
+						time: new Date().toUTCString(),
+						imageUrl: "uploading",
+						imageName,
+				  }
+				: {
+						name: user?.displayName,
+						message: input,
+						uid: user?.uid,
+						timestamp: createTimestamp(),
+						time: new Date().toUTCString(),
+				  };
+
+			const userRef = doc(db, "users", user!.uid);
+			const chatsRef = collection(userRef, "chats");
+			const chatRef = doc(chatsRef, roomId);
+			setDoc(
+				chatRef,
+				{
+					/* @ts-ignore */
+					name: room?.name,
+					/* @ts-ignore */
+					photoURL: room?.photoURL || null,
+					timestamp: createTimestamp(),
+				},
+				{ merge: true },
+			);
+
+			const roomRef = doc(db, "rooms", roomId);
+			const messagesRef = collection(roomRef, "messages");
+			const messageRef = doc(messagesRef);
+			await setDoc(messageRef, newMessage);
+
+			if (image) {
+				console.log("compressing...");
+				new Compressor(image, {
+					quality: 0.8,
+					maxWidth: 1920,
+					async success(result) {
+						console.log("image compressed");
+						setSrc("");
+						setImage(null);
+
+						const storageRef = ref(storage, imageName);
+						const snapshot = await uploadBytes(storageRef, result);
+						const downloadURL = await getDownloadURL(snapshot.ref);
+						updateDoc(messageRef, {
+							imageUrl: downloadURL,
+						});
+					},
+				});
+			}
+		}
+
+		e.preventDefault();
+	};
 
 	const showPreview = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -109,7 +184,12 @@ export const Chat = ({ user, className }: IChatProps) => {
 
 			<MediaPreview src={src} hidePreview={hidePreview} />
 
-			<ChatFooter />
+			<ChatFooter
+				input={input}
+				onChange={onChange}
+				sendMessage={sendMessage}
+				image={image}
+			/>
 		</div>
 	);
 };

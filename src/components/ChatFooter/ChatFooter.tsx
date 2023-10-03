@@ -9,10 +9,20 @@ import { useState } from "react";
 import styles from "./styles.module.css";
 
 interface IChatFooterProps {
+	input: string;
+	image: File | null;
+	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	sendMessage: React.MouseEventHandler<HTMLButtonElement>;
 	className?: string;
 }
 
-export const ChatFooter = ({ className }: IChatFooterProps) => {
+export const ChatFooter = ({
+	input,
+	image,
+	onChange,
+	sendMessage,
+	className,
+}: IChatFooterProps) => {
 	const [isRecording, setIsRecording] = useState(false);
 
 	const btnIcons = (
@@ -36,19 +46,35 @@ export const ChatFooter = ({ className }: IChatFooterProps) => {
 		</>
 	);
 
+	/* @ts-ignore */
 	const canRecord = navigator.mediaDevices.getUserMedia && window.MediaRecorder;
 
 	return (
 		<div className={cs(styles.footer, className)}>
-			<form className={styles.form}>
+			<form
+				className={styles.form}
+				onSubmit={(e) => {
+					e.preventDefault();
+				}}
+			>
 				<input
 					type="text"
 					placeholder="Type a message"
 					className={styles.footerInput}
+					value={input}
+					onChange={!isRecording ? onChange : undefined}
 				/>
 
 				{canRecord ? (
-					<button type="submit" className={styles.sendBtn}>
+					<button
+						type="submit"
+						className={styles.sendBtn}
+						onClick={
+							input.trim() || (input === "" && image)
+								? sendMessage
+								: () => undefined
+						}
+					>
 						{btnIcons}
 					</button>
 				) : (
