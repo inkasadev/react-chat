@@ -54,6 +54,7 @@ export const AudioPlayer = ({
 		if (parseInt(minutes) < 10) {
 			minutes = `0${minutes}`;
 		}
+
 		if (parseInt(seconds) < 10) {
 			seconds = `0${seconds}`;
 		}
@@ -74,7 +75,9 @@ export const AudioPlayer = ({
 
 	const stopAudio = () => {
 		audioRef.current.pause();
+
 		clearInterval(intervalRef.current);
+
 		setPlaying(false);
 		setDuration(totalDurationRef.current);
 	};
@@ -92,14 +95,14 @@ export const AudioPlayer = ({
 	};
 
 	const moveAudio = (e: any) => {
+		if (!isMediaLoaded) return;
+
 		const value = e.target.value;
 		const { duration } = audioRef.current;
 
-		if (isMediaLoaded) {
-			const seekTo = duration * (value / 100);
-			audioRef.current.currentTime = seekTo;
-			setSliderValue(value);
-		}
+		const seekTo = duration * (value / 100);
+		audioRef.current.currentTime = seekTo;
+		setSliderValue(value);
 	};
 
 	useEffect(() => {
@@ -116,40 +119,40 @@ export const AudioPlayer = ({
 	}, [audioUrl]);
 
 	useEffect(() => {
-		if (isLoaded) {
-			getAudioDuration(audioRef.current).then(() => {
-				setMetadataLoaded(true);
-			});
-		}
+		if (!isLoaded) return;
+
+		getAudioDuration(audioRef.current).then(() => {
+			setMetadataLoaded(true);
+		});
 	}, [isLoaded]);
 
 	useEffect(() => {
-		if (isMetadataLoaded) {
-			audioRef.current.addEventListener("canplaythrough", () => {
-				if (!totalDurationRef.current) {
-					setMediaLoaded(true);
+		if (!isMetadataLoaded) return;
 
-					const time = formatTime(audioRef.current.duration);
-					totalDurationRef.current = time;
-					setDuration(totalDurationRef.current);
-				}
-			});
+		audioRef.current.addEventListener("canplaythrough", () => {
+			if (!totalDurationRef.current) {
+				setMediaLoaded(true);
 
-			audioRef.current.addEventListener("ended", () => {
-				clearInterval(intervalRef.current);
+				const time = formatTime(audioRef.current.duration);
+				totalDurationRef.current = time;
 				setDuration(totalDurationRef.current);
-				setSliderValue(0);
-				setPlaying(false);
-			});
-		}
+			}
+		});
+
+		audioRef.current.addEventListener("ended", () => {
+			clearInterval(intervalRef.current);
+			setDuration(totalDurationRef.current);
+			setSliderValue(0);
+			setPlaying(false);
+		});
 	}, [isMetadataLoaded]);
 
 	useEffect(() => {
-		if (audioId !== id) {
-			audioRef.current.pause();
-			clearInterval(intervalRef.current);
-			setPlaying(false);
-		}
+		if (audioId === id) return;
+
+		audioRef.current.pause();
+		clearInterval(intervalRef.current);
+		setPlaying(false);
 	}, [audioId, id]);
 
 	return (

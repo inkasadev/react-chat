@@ -1,21 +1,34 @@
 import { AddPhotoAlternate, ArrowBack, MoreVert } from "@mui/icons-material";
-import { Avatar, IconButton } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import cs from "classnames";
 import Compressor from "compressorjs";
 import { User } from "firebase/auth";
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+	collection,
+	deleteDoc,
+	doc,
+	getDocs,
+	setDoc,
+	updateDoc,
+} from "firebase/firestore";
+import {
+	deleteObject,
+	getDownloadURL,
+	ref,
+	uploadBytes,
+} from "firebase/storage";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { createTimestamp, db, storage } from "../../firebase";
+import { audioStorage, createTimestamp, db, storage } from "../../firebase";
+import useChatMessages from "../../hooks/useChatMessages";
 import useRoom from "../../hooks/useRoom";
 import useWindowSize from "../../hooks/useWindowSize";
 import { ChatFooter } from "../ChatFooter";
 import { ChatMessages } from "../ChatMessages";
 import { MediaPreview } from "../MediaPreview";
+import { Spinner } from "../Spinner";
 import styles from "./styles.module.css";
-import useChatMessages from "../../hooks/useChatMessages";
 
 interface IChatProps {
 	user: User | null | undefined;
@@ -28,6 +41,8 @@ export const Chat = ({ user, className }: IChatProps) => {
 	const navigate = useNavigate();
 	const [image, setImage] = useState<File | null>(null);
 	const [input, setInput] = useState("");
+	const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
+	const [isDeleting, setIsDeleting] = useState(false);
 	const [src, setSrc] = useState("");
 	const [audioId, setAudioId] = useState("");
 
@@ -127,6 +142,51 @@ export const Chat = ({ user, className }: IChatProps) => {
 		setSrc("");
 	};
 
+	const deleteRoom = async () => {
+		setOpenMenu(null);
+		setIsDeleting(true);
+
+		try {
+			const roomRef = doc(db, "rooms", roomId);
+			const messagesRef = collection(roomRef, "messages");
+			const roomMessages = await getDocs(messagesRef);
+
+			const userRef = doc(db, "users", user!.uid);
+			const chatsRef = collection(userRef, "chats");
+			const chatRef = doc(chatsRef, roomId);
+
+			const audioFiles: any[] = [];
+			const imageFiles: any[] = [];
+
+			roomMessages.forEach((message) => {
+				const { audioName, imageName } = message.data();
+
+				if (audioName) {
+					audioFiles.push(audioName);
+				}
+
+				if (imageName) {
+					imageFiles.push(imageName);
+				}
+			});
+
+			await Promise.all([
+				...roomMessages.docs.map((message) => deleteDoc(message.ref)),
+				...audioFiles.map((audioName) =>
+					deleteObject(ref(audioStorage, audioName)),
+				),
+				...imageFiles.map((imageName) => deleteObject(ref(storage, imageName))),
+				deleteDoc(chatRef),
+				deleteDoc(roomRef),
+			]);
+		} catch (error) {
+			console.log("Error while deleting room: ", error);
+		} finally {
+			setIsDeleting(false);
+			navigate(-1);
+		}
+	};
+
 	return (
 		<div className={cs(styles.chat, className)}>
 			<div className={styles.chatBackground} style={{ height: page.height }} />
@@ -165,15 +225,18 @@ export const Chat = ({ user, className }: IChatProps) => {
 							<AddPhotoAlternate className={styles.headerRightIcon} />
 						</label>
 					</IconButton>
-					{/* <IconButton onClick={(event) => setOpenMenu(event.currentTarget)}></IconButton> */}
-					<IconButton>
+					<IconButton onClick={(e) => setOpenMenu(e.currentTarget)}>
 						<MoreVert className={styles.headerRightIcon} />
 					</IconButton>
-					{/*
-					<Menu id="menu" open={true} keepMounted>
-						<MenuItem>Delete Room</MenuItem>
+					<Menu
+						id="menu"
+						anchorEl={openMenu}
+						open={Boolean(openMenu)}
+						onClose={() => setOpenMenu(null)}
+						keepMounted
+					>
+						<MenuItem onClick={deleteRoom}>Delete Room</MenuItem>
 					</Menu>
-					*/}
 				</div>
 			</div>
 
@@ -202,6 +265,12 @@ export const Chat = ({ user, className }: IChatProps) => {
 				room={room}
 				roomId={roomId}
 			/>
+
+			{isDeleting && (
+				<div className={styles.deleting}>
+					<Spinner />
+				</div>
+			)}
 		</div>
 	);
 };

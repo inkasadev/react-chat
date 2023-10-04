@@ -69,3 +69,11 @@
 	height: 82%;
 	padding: 0 1rem;
 }
+
+.deleting {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
