@@ -20,7 +20,7 @@ export const Login = ({ className }: ILoginProps) => {
 					<div>
 						<img
 							src="./assets/wp-logo-large.png"
-							alt="Whatsapp Logo"
+							alt="Xatty Logo"
 							className={styles.logo}
 						/>
 					</div>
