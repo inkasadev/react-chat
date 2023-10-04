@@ -3,6 +3,8 @@ import { CircularProgress } from "@mui/material";
 import cs from "classnames";
 import { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.css";
+import { getAudioDuration } from "../../helpers/getAudioDuration";
+import { formatTime } from "../../helpers/formatTime";
 
 interface IAudioPlayerProps {
 	roomId: string;
@@ -32,35 +34,6 @@ export const AudioPlayer = ({
 	const audioRef = useRef(new Audio(audioUrl));
 	const intervalRef = useRef<NodeJS.Timeout>();
 	const isUploadingRef = useRef(audioUrl === "uploading");
-
-	const getAudioDuration = (media: HTMLAudioElement) => {
-		return new Promise((resolve) => {
-			media.onloadedmetadata = () => {
-				media.currentTime = Number.MAX_SAFE_INTEGER;
-
-				media.ontimeupdate = () => {
-					media.ontimeupdate = () => {};
-					media.currentTime = 0.1;
-					resolve(media.duration);
-				};
-			};
-		});
-	};
-
-	const formatTime = (time: number) => {
-		let minutes = Math.floor(time / 60).toString();
-		let seconds = Math.floor(time - parseInt(minutes) * 60).toString();
-
-		if (parseInt(minutes) < 10) {
-			minutes = `0${minutes}`;
-		}
-
-		if (parseInt(seconds) < 10) {
-			seconds = `0${seconds}`;
-		}
-
-		return `${minutes}:${seconds}`;
-	};
 
 	const playAudio = () => {
 		setPlaying(true);

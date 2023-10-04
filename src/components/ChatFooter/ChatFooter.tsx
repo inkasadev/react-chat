@@ -15,14 +15,15 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
-import { v4 as uuid } from "uuid";
-import { audioStorage, createTimestamp, db } from "../../firebase";
+import { pad } from "../../helpers/pad";
 import recordAudio from "../../helpers/recordAudio";
+import { audioStorage, createTimestamp, db } from "../../vendor/firebase";
 import styles from "./styles.module.css";
 
 interface IChatFooterProps {
 	input: string;
 	image: File | null;
+	imageSrc: string;
 	user: User | null | undefined;
 	room:
 		| boolean
@@ -43,6 +44,7 @@ interface IChatFooterProps {
 export const ChatFooter = ({
 	input,
 	image,
+	imageSrc,
 	onChange,
 	user,
 	room,
@@ -85,10 +87,6 @@ export const ChatFooter = ({
 		}
 	};
 
-	function pad(value: number) {
-		return String(value).length < 2 ? `0${value}` : value;
-	}
-
 	const stopRecording = async () => {
 		inputRef.current?.focus();
 		clearInterval(timerIntervalRef.current);
@@ -102,17 +100,6 @@ export const ChatFooter = ({
 	const finishRecording = async () => {
 		const audio = await stopRecording();
 		const { audioFile, audioName } = await audio;
-		sendAudio(audioFile, audioName);
-	};
-
-	const handleAudioInputChange = (e: any) => {
-		const files = e.target.files;
-		if (!files) return;
-
-		const audioFile = files[0];
-		if (!audioFile) return;
-
-		const audioName = uuid();
 		sendAudio(audioFile, audioName);
 	};
 
@@ -163,21 +150,22 @@ export const ChatFooter = ({
 					height: 20,
 					color: "white",
 				}}
-				className={styles.chatFooterIcon}
-			></Send>
+				className={cs(styles.chatFooterIcon, {
+					[styles.hideChatFooterIcon]: !!!imageSrc,
+				})}
+			/>
 			<MicRounded
 				style={{
 					width: 24,
 					height: 24,
 					color: "white",
 				}}
-				className={styles.chatFooterIcon}
-			></MicRounded>
+				className={cs(styles.chatFooterIcon, {
+					[styles.hideChatFooterIcon]: !!imageSrc,
+				})}
+			/>
 		</>
 	);
-
-	/* @ts-ignore */
-	const canRecord = navigator.mediaDevices.getUserMedia && window.MediaRecorder;
 
 	useEffect(() => {
 		const el = recordingElRef.current;
@@ -185,7 +173,6 @@ export const ChatFooter = ({
 
 		if (!isRecording || !el || !record) return;
 
-		el.style.opacity = "1";
 		startTimer();
 		record.start();
 	}, [isRecording]);
@@ -207,34 +194,18 @@ export const ChatFooter = ({
 					ref={inputRef}
 				/>
 
-				{canRecord ? (
-					!isRecording && (
-						<button
-							type="submit"
-							className={cs(styles.sendBtn)}
-							onClick={
-								input.trim() || (input === "" && image)
-									? sendMessage
-									: startRecording
-							}
-						>
-							{btnIcons}
-						</button>
-					)
-				) : (
-					<>
-						<label htmlFor="capture" className={styles.sendBtn}>
-							{btnIcons}
-						</label>
-						<input
-							type="file"
-							accept="audio/*"
-							id="capture"
-							style={{ display: "none" }}
-							capture
-							onChange={handleAudioInputChange}
-						/>
-					</>
+				{!isRecording && (
+					<button
+						type="submit"
+						className={cs(styles.sendBtn)}
+						onClick={
+							input.trim() || (input === "" && image)
+								? sendMessage
+								: startRecording
+						}
+					>
+						{btnIcons}
+					</button>
 				)}
 			</form>
 
@@ -249,10 +220,12 @@ export const ChatFooter = ({
 						}}
 						onClick={stopRecording}
 					/>
+
 					<div className={styles.recordInfoContainer}>
 						<div className={styles.recordRedCircle}></div>
 						<div className={styles.recordDuration}>{duration}</div>
 					</div>
+
 					<CheckCircleRounded
 						style={{
 							width: 30,

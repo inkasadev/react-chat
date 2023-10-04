@@ -1,6 +1,6 @@
 import { doc } from "firebase/firestore";
 import { useDocument } from "react-firebase-hooks/firestore";
-import { db } from "../firebase";
+import { db } from "../vendor/firebase";
 
 const useRoom = (roomId: string, userId: string) => {
 	const isUserRoom = roomId.includes(userId);

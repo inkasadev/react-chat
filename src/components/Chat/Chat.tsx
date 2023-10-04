@@ -20,10 +20,15 @@ import {
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { audioStorage, createTimestamp, db, storage } from "../../firebase";
 import useChatMessages from "../../hooks/useChatMessages";
 import useRoom from "../../hooks/useRoom";
 import useWindowSize from "../../hooks/useWindowSize";
+import {
+	audioStorage,
+	createTimestamp,
+	db,
+	imageStorage,
+} from "../../vendor/firebase";
 import { ChatFooter } from "../ChatFooter";
 import { ChatMessages } from "../ChatMessages";
 import { MediaPreview } from "../MediaPreview";
@@ -111,7 +116,7 @@ export const Chat = ({ user, className }: IChatProps) => {
 						setSrc("");
 						setImage(null);
 
-						const storageRef = ref(storage, imageName);
+						const storageRef = ref(imageStorage, imageName);
 						const snapshot = await uploadBytes(storageRef, result);
 						const downloadURL = await getDownloadURL(snapshot.ref);
 						updateDoc(messageRef, {
@@ -175,7 +180,9 @@ export const Chat = ({ user, className }: IChatProps) => {
 				...audioFiles.map((audioName) =>
 					deleteObject(ref(audioStorage, audioName)),
 				),
-				...imageFiles.map((imageName) => deleteObject(ref(storage, imageName))),
+				...imageFiles.map((imageName) =>
+					deleteObject(ref(imageStorage, imageName)),
+				),
 				deleteDoc(chatRef),
 				deleteDoc(roomRef),
 			]);
@@ -224,9 +231,11 @@ export const Chat = ({ user, className }: IChatProps) => {
 							<AddPhotoAlternate className={styles.headerRightIcon} />
 						</label>
 					</IconButton>
+
 					<IconButton onClick={(e) => setOpenMenu(e.currentTarget)}>
 						<MoreVert className={styles.headerRightIcon} />
 					</IconButton>
+
 					<Menu
 						id="menu"
 						anchorEl={openMenu}
@@ -258,6 +267,7 @@ export const Chat = ({ user, className }: IChatProps) => {
 				onChange={onChange}
 				sendMessage={sendMessage}
 				image={image}
+				imageSrc={src}
 				setAudioId={setAudioId}
 				user={user}
 				room={room}

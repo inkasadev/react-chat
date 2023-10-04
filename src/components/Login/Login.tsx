@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import cs from "classnames";
 import { signInWithRedirect } from "firebase/auth";
-import { auth, provider } from "../../firebase";
+import { auth, provider } from "../../vendor/firebase";
 import styles from "./styles.module.css";
 
 interface ILoginProps {

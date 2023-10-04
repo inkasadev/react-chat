@@ -34,10 +34,6 @@
 	outline: none;
 }
 
-.hideSendBtn {
-	display: none;
-}
-
 .sendBtn svg {
 	position: absolute;
 	top: 50%;
@@ -45,9 +41,8 @@
 	transform: translateX(-50%) translateY(-50%);
 }
 
-.sendBtn svg:nth-child(1) {
-	opacity: 0;
-	transform: translateX(-50%) translateY(-50%);
+.hideChatFooterIcon {
+	display: none !important;
 }
 
 .footerInput {

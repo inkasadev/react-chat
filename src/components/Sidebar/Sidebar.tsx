@@ -19,11 +19,11 @@ import {
 } from "firebase/firestore";
 import { useState } from "react";
 import { NavLink, Route, Routes } from "react-router-dom";
-import { auth, createTimestamp, db } from "../../firebase";
 import useChats from "../../hooks/useChats";
 import useRooms from "../../hooks/useRooms";
 import useUsers from "../../hooks/useUsers";
 import useWindowSize from "../../hooks/useWindowSize";
+import { auth, createTimestamp, db } from "../../vendor/firebase";
 import { SidebarList } from "../SidebarList";
 import styles from "./styles.module.css";
 
@@ -47,8 +47,9 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 
 	const createRoom = async () => {
 		const roomName = prompt("Enter room name");
+
 		if (roomName?.trim()) {
-			const roomsRef = await collection(db, "rooms");
+			const roomsRef = collection(db, "rooms");
 			await setDoc(doc(roomsRef), {
 				name: roomName,
 				timestamp: createTimestamp(),
@@ -57,11 +58,9 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 	};
 
 	const searchUserAndRooms = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
 		const value = search.trim();
-		const usersRef = await collection(db, "users");
-		const roomsRef = await collection(db, "rooms");
+		const usersRef = collection(db, "users");
+		const roomsRef = collection(db, "rooms");
 		const q1 = query(usersRef, where("name", "==", value));
 		const q2 = query(roomsRef, where("name", "==", value));
 		const userSnapshot = await getDocs(q1);
@@ -80,6 +79,8 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 		const results = [...userResults, ...roomResults];
 		setMenu(4);
 		setSearchResults(results);
+
+		e.preventDefault();
 	};
 
 	return (
@@ -95,6 +96,7 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 					</IconButton>
 				</div>
 			</div>
+
 			<div className={styles.search}>
 				<form onSubmit={searchUserAndRooms} className={styles.searchContainer}>
 					<SearchOutlined className={styles.searchIcon} />
@@ -108,6 +110,7 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 					/>
 				</form>
 			</div>
+
 			<div className={styles.menu}>
 				<NavLink
 					to="/chats"

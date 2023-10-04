@@ -8,12 +8,12 @@ import { getStorage, ref } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+	authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+	projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+	storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+	messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+	appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -22,17 +22,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-const storage = ref(getStorage(app), "images");
+const imageStorage = ref(getStorage(app), "images");
 const audioStorage = ref(getStorage(app), "audios");
 const createTimestamp = serverTimestamp;
-const getServerTimestamp = serverTimestamp();
 
-export {
-  db,
-  auth,
-  provider,
-  storage,
-  audioStorage,
-  createTimestamp,
-  getServerTimestamp,
-};
+export { db, auth, provider, imageStorage, audioStorage, createTimestamp };

@@ -1,8 +1,8 @@
+import { CancelOutlined, SearchOutlined } from "@mui/icons-material";
 import cs from "classnames";
-import styles from "./styles.module.css";
-import { SearchOutlined, CancelOutlined } from "@mui/icons-material";
-import { Spinner } from "../Spinner";
 import { SidebarListItem } from "../SidebarListItem";
+import { Spinner } from "../Spinner";
+import styles from "./styles.module.css";
 
 interface ISidebarListProps {
 	title: string;
@@ -11,9 +11,7 @@ interface ISidebarListProps {
 }
 
 export const SidebarList = ({ title, data, className }: ISidebarListProps) => {
-	if (!data) {
-		return <Spinner />;
-	}
+	if (!data) return <Spinner />;
 
 	if (data.length === 0 && title === "Search Results") {
 		return (

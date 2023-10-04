@@ -1,5 +1,5 @@
 import { collection, orderBy, query } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../vendor/firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 const useRooms = () => {
