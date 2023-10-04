@@ -58,7 +58,7 @@ export const Sidebar = ({ user, className }: ISidebarProps) => {
 
 	const searchUserAndRooms = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		// const searchInput = document.getElementById("search") as HTMLInputElement;
+
 		const value = search.trim();
 		const usersRef = await collection(db, "users");
 		const roomsRef = await collection(db, "rooms");

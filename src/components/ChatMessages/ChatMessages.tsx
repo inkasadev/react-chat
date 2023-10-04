@@ -35,7 +35,6 @@ export const ChatMessages = ({
 							styles.messageContainer,
 							{
 								[styles.messageFromUser]: isUser,
-								// [styles.messageOther]: !isUser,
 							},
 							className,
 						)}

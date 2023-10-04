@@ -7,14 +7,6 @@
 
 	position: absolute;
 	bottom: 3px;
-	/*
-	background-color: transparent;
-	z-index: 1;
-	padding: 0 10px;
-	height: 54px;
-	z-index: 5;
-	transform: translateZ(456px);
-    */
 }
 
 .form {
@@ -32,10 +24,6 @@
 	box-shadow: 0px 0px 2px 0px #0000005e;
 	cursor: pointer;
 	position: relative;
-	/*
-    transition: transform 150ms;
-    transform: scale(1);
-    */
 }
 
 .sendBtn:active {
@@ -74,10 +62,6 @@
 	font-family: Roboto, sans-serif;
 	transition: all 300ms;
 	font-weight: 500;
-	/*
-	box-shadow: 0px 0px 2px 0px #0000003b;
-	position: relative;
-    */
 }
 
 .footerInput:focus {
@@ -91,10 +75,6 @@
 	justify-content: space-between;
 	right: 4rem;
 	width: 13.5rem;
-	/*
-	opacity: 0;
-	transition: opacity 300ms;
-  */
 }
 
 .recordInfoContainer {
@@ -122,95 +102,3 @@
 		opacity: 1;
 	}
 }
-
-/*
-.record > div {
-
-}
-
-.record__redcircle {
-
-}
-
-.record__duration {
-  font-size: 15px;
-  font-weight: 500;
-  color: #737373;
-}
-
-.record > .MuiSvgIcon-root {
-  cursor: pointer;
-}
-
-
-*/
-
-/*
-
-  
-
-  
-  .chat__footer > .MuiSvgIcon-root {
-    color: gray;
-    box-sizing: content-box;
-  }
-  
-
-  
-
-  
-  .send__animate-enter,
-  .send__animate2-enter {
-    opacity: 0 !important;
-    transform: scale(0.8) translateX(-58%) translateY(-58%) !important;
-  }
-  
-  .send__animate-enter-active,
-  .send__animate2-enter-active {
-    opacity: 1 !important;
-    transform: scale(1) translateX(-50%) translateY(-50%) !important;
-    transition: opacity 200ms, transform 200ms !important;
-    transition-delay: 200ms !important;
-  }
-  
-  .send__animate-enter-done,
-  .send__animate2-enter-done {
-    opacity: 1 !important;
-  }
-  
-  .send__animate-exit,
-  .send__animate2-exit {
-    opacity: 1 !important;
-    transform: scale(1) translateX(-50%) translateY(-50%) !important;
-  }
-  
-  .send__animate-exit-active,
-  .send__animate2-exit-active {
-    opacity: 0 !important;
-    transform: scale(0.8) translateX(-58%) translateY(-58%) !important;
-    transition: opacity 200ms, transform 200ms !important;
-  }
-  
-  .send__animate-exit-done,
-  .send__animate2-exit-done {
-    opacity: 0 !important;
-  }
-  
-  .send__animate2-enter {
-    transform: scale(0.8) translateX(-58%) translateY(-58%) !important;
-  }
-  
-  .send__animate2-enter-active {
-    transform: scale(1) translateX(-47%) translateY(-50%) !important;
-  }
-  
-  .send__animate2-exit {
-    transform: scale(1) translateX(-47%) translateY(-50%) !important;
-  }
-  
-  .send__animate2-exit-active {
-    transform: scale(0.8) translateX(-57%) translateY(-58%) !important;
-  }
-  
-
-*/

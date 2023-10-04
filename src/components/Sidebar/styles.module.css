@@ -1,10 +1,4 @@
 .sidebar {
-	/* display: flex; */
-	/*
-    flex-direction: column;
-	flex: 0.3;
-    */
-	/* width: 30%; */
 	width: 100%;
 	position: relative;
 	background-color: white;
@@ -30,12 +24,6 @@
 .name {
 	font-size: 15px;
 	font-weight: 500;
-	/*
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	max-width: 100%;
-    */
 }
 
 .headerRight {
@@ -49,7 +37,6 @@
 
 @media screen and (min-width: 768px) {
 	.sidebar {
-		/* width: 30%; */
 		max-width: 420px;
 		min-height: 100vh;
 	}

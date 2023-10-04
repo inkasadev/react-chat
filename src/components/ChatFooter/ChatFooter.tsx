@@ -5,11 +5,7 @@ import {
 	Send,
 } from "@mui/icons-material";
 import cs from "classnames";
-import { useEffect, useRef, useState } from "react";
-import styles from "./styles.module.css";
-import recordAudio from "../../helpers/recordAudio";
 import { User } from "firebase/auth";
-import { audioStorage, createTimestamp, db } from "../../firebase";
 import {
 	FirestoreError,
 	collection,
@@ -18,7 +14,11 @@ import {
 	updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { audioStorage, createTimestamp, db } from "../../firebase";
+import recordAudio from "../../helpers/recordAudio";
+import styles from "./styles.module.css";
 
 interface IChatFooterProps {
 	input: string;
@@ -64,7 +64,7 @@ export const ChatFooter = ({
 
 		recordRef.current = await recordAudio();
 		inputRef.current?.focus();
-		// inputRef.current.style.width = "calc(100% - 56px)";
+
 		setIsRecording(true);
 		setAudioId("");
 

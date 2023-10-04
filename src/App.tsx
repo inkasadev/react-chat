@@ -6,11 +6,9 @@ import { Login } from "./components/Login";
 import { Sidebar } from "./components/Sidebar";
 import { Spinner } from "./components/Spinner";
 import useAuthUser from "./hooks/useAuthUser";
-// import useWindowSize from "./hooks/useWindowSize";
 
 function App() {
 	const [user, loading] = useAuthUser();
-	// const page = useWindowSize();
 
 	if (loading)
 		return (
@@ -23,7 +21,6 @@ function App() {
 
 	return (
 		<div className={styles.app}>
-			{/* <Navigate to={page.isMobile ? "/chats" : "/"} replace={true} /> */}
 			<Sidebar user={user as User} />
 			<Routes>
 				<Route path="/room/:roomId" element={<Chat user={user as User} />} />{" "}

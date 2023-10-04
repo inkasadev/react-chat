@@ -3,29 +3,11 @@
 	width: 100%;
 	height: 100%;
 	opacity: 1;
-	/*
-	flex: 0.7;
-	display: flex;
-	flex-direction: column;
-	position: absolute;
-	right: 0;
-	top: 0;
-	background-color: #e5ddd5;
-	transform: translateZ(456px);
-    */
 }
 
 .chatBackground {
 	position: absolute;
-	/* background-image: url("https://web.whatsapp.com/img/bg-chat-tile-light_686b98c9fdffef3f63127759e2057750.png"); */
-	background: url("../../../public/assets/bg-chat.png");
-	/* background-color: pink; */
-	/* background-size: contain; */
-	/* background-position: top; */
-	/*
-    background: url("https://web.whatsapp.com/img/bg-chat-tile-light_686b98c9fdffef3f63127759e2057750.png")
-		no-repeat center/cover;
-    */
+	background: url("/assets/bg-chat.png");
 	width: 100%;
 	height: 100%;
 	z-index: -1;
@@ -48,10 +30,6 @@
 .headerInfo {
 	flex: 1;
 	display: flex;
-	/*
-	flex-direction: column;
-	gap: 0.2rem;
-    */
 }
 
 .headerRight {

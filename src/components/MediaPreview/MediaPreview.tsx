@@ -1,6 +1,6 @@
+import { CloseRounded } from "@mui/icons-material";
 import cs from "classnames";
 import styles from "./styles.module.css";
-import { CloseRounded } from "@mui/icons-material";
 
 interface IMediaPreviewProps {
 	src: string;

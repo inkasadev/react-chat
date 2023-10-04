@@ -204,7 +204,6 @@ export const Chat = ({ user, className }: IChatProps) => {
 				</div>
 
 				<div className={styles.headerInfo}>
-					{/* <h3 style={{ width: page.isMobile && page.width - 165 }}> */}
 					<h3>
 						{/* @ts-ignore */}
 						{room?.name}
@@ -241,7 +240,6 @@ export const Chat = ({ user, className }: IChatProps) => {
 			</div>
 
 			<div className={styles.bodyContainer}>
-				{/* <div className="chat__body" style={{ height: page.height - 68 }}> */}
 				<div className={styles.body}>
 					<ChatMessages
 						messages={messages as any[]}

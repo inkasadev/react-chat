@@ -1,8 +1,8 @@
-import cs from "classnames";
-import styles from "./styles.module.css";
-import { useEffect, useRef, useState } from "react";
-import { CircularProgress } from "@mui/material";
 import { PauseRounded, PlayArrowRounded } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
+import cs from "classnames";
+import { useEffect, useRef, useState } from "react";
+import styles from "./styles.module.css";
 
 interface IAudioPlayerProps {
 	roomId: string;
