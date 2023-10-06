@@ -97,7 +97,7 @@ Allow users to record and send voice messages. This feature adds a dynamic and i
 
 ## Architecture and Directories
 
-This section provides an in-depth overview of the structural design and organization of this codebase. It outlines the directories and components that make up the app's architecture, helping developers understand how the project is structured and how different parts of the application interact.
+This section provides an in-depth overview of the structural design and organization of this codebase. It outlines the directories that make up the app's architecture, helping developers understand how the project is structured.
 
 ```
 Project
